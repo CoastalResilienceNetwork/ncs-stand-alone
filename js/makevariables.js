@@ -1,6 +1,8 @@
 // variables
 cd = {};
+
 cd.url = "https://cumulus.tnc.org/arcgis/rest/services/nascience/NCS_CountryDashboard/MapServer";
+
 cd.querySource = "menu";
 cd.selectedCountry = 0;
 cd.countries = 1;
