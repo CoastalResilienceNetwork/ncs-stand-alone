@@ -284,6 +284,12 @@ html, body{
 #poweredBy{
 	position:absolute; bottom:0; left:72px;
 }
+.esriPopup .titleButton.maximize, .esriPopup .actionsPane{
+	display:none;
+}
+.esriPopup .contentPane{
+	padding:0;
+}
 
 /* media queries */
 /* drop the map for anything less than 500px wide/portrait view */

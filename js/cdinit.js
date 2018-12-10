@@ -1,9 +1,9 @@
 // esri api calls
 require(["esri/map", "esri/layers/ArcGISDynamicMapServiceLayer", "esri/tasks/query", "esri/tasks/QueryTask", "esri/symbols/TextSymbol",
 	"esri/symbols/Font", "esri/Color", "esri/geometry/Extent", "esri/layers/FeatureLayer", "esri/symbols/SimpleFillSymbol", "esri/symbols/SimpleLineSymbol",
-        "esri/renderers/SimpleRenderer", "esri/graphic"], 
+        "esri/renderers/SimpleRenderer", "esri/graphic", "esri/symbols/PictureMarkerSymbol", "esri/InfoTemplate"], 
 function(Map, ArcGISDynamicMapServiceLayer, Query, QueryTask, TextSymbol, Font, Color, Extent, FeatureLayer, SimpleFillSymbol, SimpleLineSymbol,
-        SimpleRenderer, Graphic) {
+        SimpleRenderer, Graphic, PictureMarkerSymbol, InfoTemplate) {
 	// inital extent
 	var bounds = new Extent({ "xmin":-13000000, "ymin":0, "xmax":13000000, "ymax":2000000, "spatialReference":{"wkid":54030}});
 	
@@ -27,10 +27,26 @@ function(Map, ArcGISDynamicMapServiceLayer, Query, QueryTask, TextSymbol, Font, 
 	// selection feature layer
 	cd.fcSel = new FeatureLayer(cd.url + "/0", {mode: FeatureLayer.MODE_SELECTION});
 	
+	// postcard symbol
+	var pcSymbol = new PictureMarkerSymbol("images/pc.png", 38, 60)
+	var pcRenderer = new SimpleRenderer(pcSymbol);
+	
+	// postcard popup window
+	var pcTemplate = new InfoTemplate();
+	pcTemplate.setTitle("<b>${country}</b>");
+	pcTemplate.setContent("<a href='${link}' target='_blank'><img style='margin-top:-9px;' src='images/${pid}.png'></a>")
+
+	// postcard feature layer
+	cd.fcPc = new FeatureLayer(cd.url + "/2",{outFields:["country","pid", "link"], infoTemplate:pcTemplate});
+	cd.fcPc.setRenderer(pcRenderer);
+
 	// add feature layers to map
 	cd.map.addLayer(cd.fc);
 	cd.map.addLayer(cd.fcSel);
+	cd.map.addLayer(cd.fcPc);
 	
+	cd.map.infoWindow.resize(500, 285);
+
 	// query that poulates country dropdown and gets all attribute data
 	var q = new Query(); 
 	var qt = new QueryTask(cd.url + "/" + cd.countries);
